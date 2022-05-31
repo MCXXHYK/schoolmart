@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.CommentDao">
+
+    <insert id="InsertIntoComment" parameterType="com.pojo.Comment_info">
+        insert into comment_info(content,bname,uemail,uid,createTime) values (#{content},#{bname},#{uemail},#{uid},#{createTime})
+    </insert>
+
+    <select id="queryComment" resultType="com.pojo.Comment_info">
+        select * from comment_info where bname=#{bname}
+    </select>
+
+    <select id="pageComments" resultType="com.pojo.Comment_info" parameterType="com.pojo.Comment_info">
+        select * from comment_info
+        <if test="uid !=null and uid!=''">where uid=#{uid}</if>
+        <if test="uemail !=null and uemail!=''">where uemail like concat('%',#{uemail},'%')</if>
+        order by createTime desc
+        limit #{start}, #{pageSize}
+    </select>
+
+    <select id="pageCommentsTotal" resultType="int" parameterType="com.pojo.Comment_info">
+        select count(*) from comment_info
+        <if test="uid !=null and uid!=''">where uid=#{uid}</if>
+        <if test="uemail !=null and uemail!=''">where uemail like concat('%',#{uemail},'%')</if>
+    </select>
+
+    <delete id="deleteComment">
+        delete from comment_info where comment_id=#{comment_id}
+    </delete>
+
+    <select id="count" resultType="Integer">
+        select count(*) from comment_info
+    </select>
+</mapper>

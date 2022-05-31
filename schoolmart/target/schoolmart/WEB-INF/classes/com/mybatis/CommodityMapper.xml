@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.CommodityDao">
+
+    <select id="selectAllCommoditys" resultType="com.pojo.Commodity">
+        select * from commodity
+    </select>
+
+    <select id="selectCommodityByName" resultType="com.pojo.Commodity" parameterType="com.pojo.Commodity">
+        select * from commodity
+        <where>
+            <if test="bname !=null and bname !=''">
+                and bname like concat('%',#{bname},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectCommodityById" resultType="com.pojo.Commodity">
+        select * from commodity where bid=#{bid}
+    </select>
+
+    <insert id="insertCommodity">
+       insert into commodity (bname,bprice,btype,bstock,bcover,bdetail,bisHot) values (#{bname},#{bprice},#{btype},#{bstock},#{bcover},#{bdetail},#{bisHot})
+    </insert>
+
+    <delete id="deleteCommodity">
+        delete from commodity where bid=#{bid}
+    </delete>
+
+    <update id="updateCommodity" parameterType="com.pojo.Commodity">
+        update commodity set bname=#{bname},bprice=#{bprice},btype=#{btype},bdetail=#{bdetail},bstock=#{bstock},bisHot=#{bisHot} where bid=#{bid}
+    </update>
+
+    <select id="selectCommodityType" resultType="java.lang.String">
+        select DISTINCT btype from commodity
+    </select>
+
+    <select id="selectCommodityByType" resultType="com.pojo.Commodity">
+        select * from commodity where btype=#{btype}
+    </select>
+
+    <select id="selectHotGoods" resultType="com.pojo.Commodity">
+        select * from commodity where bisHot=1
+    </select>
+
+    <select id="pageGoods" resultType="com.pojo.Commodity" parameterType="com.pojo.Commodity">
+        select * from commodity
+        <if test="bname !=null and bname!=''">where bname like concat('%',#{bname},'%')</if>
+        order by btype DESC
+        limit #{start}, #{pageSize}
+    </select>
+
+    <select id="pageGoodsTotal" resultType="int" parameterType="com.pojo.Commodity">
+        select count(*) from commodity
+        <if test="bname !=null and bname!=''">where bname like concat('%',#{bname},'%')</if>
+    </select>
+
+    <select id="count" resultType="Integer">
+        select count(*) from commodity
+    </select>
+
+</mapper>

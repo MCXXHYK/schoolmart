@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+    <context:component-scan base-package="com.controller"/>
+
+
+    <!--    <mvc:resources location="/images/" mapping="/images/**"></mvc:resources>-->
+    <!--    &lt;!&ndash; 查看图片时，logos文件夹不需要dispatcher servlet &ndash;&gt;-->
+    <!--    <mvc:resources location="/logos/" mapping="/logos/**"></mvc:resources>-->
+    <!-- 配置视图解析器 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" id="internalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+    <!--    <mvc:default-servlet-handler />-->
+    <mvc:annotation-driven/>
+    <mvc:resources mapping="/css/**" location="/css/"/>
+    <mvc:resources mapping="/mycss/**" location="/mycss/"/>
+    <mvc:resources mapping="/js/**" location="/js/"/>
+    <mvc:resources mapping="/images/**" location="/images/"/>
+    <!--    <mvc:resources mapping="/html/**" location="/html/"/>-->
+    <mvc:resources mapping="/fonts/**" location="/fonts/"/>
+    <mvc:resources mapping="/upload/**" location="/upload/"/>
+    <mvc:resources mapping="/WEB-INF/jsp/static/**" location="/WEB-INF/jsp/static/"/>
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/**/*.css"/>
+            <mvc:exclude-mapping path="/**/*.js"/>
+            <mvc:exclude-mapping path="/**/*.png"/>
+            <mvc:exclude-mapping path="/**/*.html"/>
+            <mvc:exclude-mapping path="/**/*.jsp"/>
+            <mvc:exclude-mapping path="/**/*.ico"/>
+            <mvc:exclude-mapping path="/**/*.jpg"/>
+            <bean class="com.utils.LoginInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+    <!--文件上传-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!--设置上传最大尺寸为5MB-->
+        <property name="maxUploadSizePerFile" value="5242880"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="resolveLazily" value="true"/>
+    </bean>
+</beans>

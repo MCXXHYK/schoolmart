@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.OrderDao">
+
+    <insert id="buycommodity">
+        insert into orders (ototal,oamount,ostatus,uid,uemail,telnum,address,odate,bname,bid) values (#{ototal},#{oamount},#{ostatus},#{uid},#{uemail},#{telnum},#{address},#{odate},#{bname},#{bid})
+    </insert>
+
+    <select id="selectAllOrders" resultType="com.pojo.Order">
+        select * from orders where uid=#{uid}
+    </select>
+
+    <delete id="delOrder">
+        delete from orders where oid=#{oid}
+    </delete>
+
+    <select id="findOrderById" resultType="com.pojo.Order">
+        select * from orders where oid=#{oid}
+    </select>
+
+    <update id="payfor">
+        update orders set ototal=#{ototal},oamount=#{oamount},ostatus=#{ostatus},uemail=#{uemail},telnum=#{telnum},address=#{address} where oid=#{oid}
+    </update>
+
+    <select id="selectAll" resultType="com.pojo.Order">
+        select * from orders
+    </select>
+
+    <select id="selectOrderByEmail" resultType="com.pojo.Order">
+        select * from orders where uemail=#{uemail}
+    </select>
+
+    <update id="makesure">
+        update orders set ostatus="已确认收货" where oid=#{oid}
+    </update>
+
+    <select id="pageOrder" resultType="com.pojo.Order" parameterType="com.pojo.Order">
+        select * from orders
+        <if test="uemail !=null and uemail!=''">where uemail like concat('%',#{uemail},'%')</if>
+        <if test="uid !=null and uid!=''">where uid=#{uid}</if>
+        order by odate desc
+        limit #{start}, #{pageSize}
+    </select>
+
+    <select id="pageOrderTotal" resultType="int" parameterType="com.pojo.Order">
+        select count(*) from orders
+        <if test="uemail !=null and uemail!=''">where uemail like concat('%',#{uemail},'%')</if>
+        <if test="uid !=null and uid!=''">where uid=#{uid}</if>
+    </select>
+
+    <select id="count" resultType="Integer">
+        select count(*) from orders
+    </select>
+
+    <select id="totalPrice" resultType="Double">
+        select sum(ototal) from orders where ostatus = '已确认收货'
+    </select>
+
+    <select id="totalShopping" resultType="Integer">
+        select sum(oamount) from orders where ostatus = '已确认收货'
+    </select>
+
+    <select id="groupOrder" resultType="map">
+       select btype,SUM(oamount)  oamount  from orders  o LEFT JOIN commodity  c on o.bid=c.bid  where  o.ostatus != '未付款' GROUP BY btype
+    </select>
+
+    <select id="sortOtotal" resultType="map">
+       select btype,SUM(ototal)  ototal  from orders  o LEFT JOIN commodity  c on o.bid=c.bid  where  o.ostatus != '未付款' GROUP BY btype
+    </select>
+
+    <select id="topThree" resultType="com.pojo.TopThree">
+        select btype,SUM(ototal)  ototal  from orders  o LEFT JOIN commodity  c on o.bid=c.bid  where  o.ostatus != '未付款' GROUP BY btype ORDER BY ototal DESC LIMIT 3
+    </select>
+</mapper>

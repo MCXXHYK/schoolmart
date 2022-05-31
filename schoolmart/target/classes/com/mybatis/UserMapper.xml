@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.UserDao">
+
+    <select id="login" resultType="com.pojo.User" parameterType="com.pojo.User">
+        select * from user where uemail=#{uemail} and upwd=#{upwd}
+    </select>
+
+    <select id="selectUserInfo" resultType="com.pojo.User" parameterType="Integer">
+        select * from user where uid=#{uid}
+    </select>
+
+    <select id="selectAllUser" resultType="com.pojo.User">
+        select * from user where type =0
+    </select>
+
+    <select id="selectUserByEmail" resultType="com.pojo.User">
+        select * from user where uemail=#{uemail}
+    </select>
+
+    <insert id="registeruser">
+        insert into user(uemail,upwd,usex,address,telnum,type) values (#{uemail},#{upwd},#{usex},#{address},#{telnum},#{type})
+    </insert>
+
+    <update id="updateadmin">
+        update user set uemail=#{uemail},telnum=#{telnum},address=#{address},usex=#{usex} where uid=#{uid}
+    </update>
+
+    <delete id="delete">
+        delete from user  where uid=#{uid}
+    </delete>
+
+    <update id="UpdatePassword">
+        update user set upwd=#{newPassword} where uid=#{uid}
+    </update>
+
+    <update id="forgetupwd">
+        update user set upwd=#{newPassword} where uid=#{uid}
+    </update>
+
+    <select id="pageUser" resultType="com.pojo.User" parameterType="com.pojo.User">
+        select * from user where type =0
+        <if test="uemail !=null and uemail!=''">and uemail like concat('%',#{uemail},'%')</if>
+        limit #{start}, #{pageSize}
+    </select>
+
+    <select id="pageUserTotal" resultType="int" parameterType="com.pojo.User">
+        select count(*) from user where type =0
+        <if test="uemail !=null and uemail!=''">and uemail like concat('%',#{uemail},'%')</if>
+    </select>
+
+    <select id="count" resultType="Integer">
+        select count(*) from user
+    </select>
+
+</mapper>
