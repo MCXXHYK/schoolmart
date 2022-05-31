@@ -8,7 +8,8 @@ import java.util.Scanner;
  */
 public class StringBufferExercise01 {
     public static void main(String[] args) {
-        System.out.print("请输入商品名：");
+        System.out.println("Hello, Git!");
+	System.out.print("请输入商品名：");
         Scanner scanner = new Scanner(System.in);
         String name = scanner.next();
         System.out.print("请输入商品价格：");
